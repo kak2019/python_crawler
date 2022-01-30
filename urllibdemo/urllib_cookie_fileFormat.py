@@ -6,11 +6,14 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 
 
-cookie = http.cookiejar.CookieJar()
+
+filename = "cookie.txt"
+
+cookie = http.cookiejar.MozillaCookieJar(filename)
+cookie = http.cookiejar.LWPCookieJar(filename)
 handler = urllib.request.HTTPCookieProcessor(cookie)
+
 opener = urllib.request.build_opener(handler)
 
 response = opener.open("https://www.baidu.com")
-for item in cookie:
-    print(item.name + "=" + item.value)
-
+cookie.save(ignore_discard=True,ignore_expires=True)
